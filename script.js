@@ -1,13 +1,3 @@
-// Pseudocode
-// 1. Write function getComputerChoice (x)
-// 2. Function should return a random choice between rock, paper, scissors as string values. (x)
-// 3. USe Math.Random to select value 0, 1, 2 which will represent the choice of the computer. (x)
-// 4. Create a function getHumanChoice that asks the user to input their choice of rock, paper, or scissors. (x)
-// 5. Create a function playRound that takes in the human choice and computer choice and returns the result of the round. (x) 
-// 6. Create a function game that plays 5 rounds of rock, paper, scissors and keeps track of the score.
-// 7. The game should declare the winner or if there is a tie.
-// Added: Human input should not be case sensitive. 
-
 const max = 3
 let humanScore = 0;
 let computerScore = 0;
@@ -34,7 +24,7 @@ function getHumanChoice() {
     let choice = prompt("Select Rock, Paper, or Scissors");
     if (choice.toUpperCase() !== "ROCK" && choice.toUpperCase()  !== "PAPER" && choice.toUpperCase() !== "SCISSORS") {
         console.log("Invalid Choice - Try Again");
-        return getHumanChoice(); // recursively ask again
+        return getHumanChoice();
     }
     console.log("You chose " + choice.toUpperCase());
     return choice.toUpperCase();
@@ -81,7 +71,7 @@ function playGame() {
     } 
 }
 
-// Add event listener to a button
+// Allows player to press Play Game button to play the game. 
 document.getElementById('playButton').addEventListener('click', () => {
     console.log('Button clicked!');
     humanScore = 0;

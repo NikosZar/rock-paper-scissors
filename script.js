@@ -81,4 +81,10 @@ function playGame() {
     } 
 }
 
-playGame();
+// Add event listener to a button
+document.getElementById('playButton').addEventListener('click', () => {
+    console.log('Button clicked!');
+    humanScore = 0;
+    computerScore = 0;
+    playGame();
+});

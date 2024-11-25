@@ -1,80 +1,102 @@
-const max = 3
+const max = 3;
 let humanScore = 0;
 let computerScore = 0;
+let gameRound = 0;
 
 
-// Get the computer choice of rock, paper, or scissors. 
+// Get the computer choice of rock, paper, or scissors.
 function getComputerChoice(max) {
     const randomNumber = Math.floor(Math.random() * max);
 
     if (randomNumber === 0) {
-        console.log("Computer chose Rock"); // update to return 
+        console.log("Computer chose Rock");
         return "ROCK";
     } else if (randomNumber === 1) {
-        console.log("Computer chose Paper"); // update to return 
+        console.log("Computer chose Paper");
         return "PAPER";
     } else {
-        console.log("Computer chose Scissors"); // update to return 
+        console.log("Computer chose Scissors");
         return "SCISSORS";
     }
 }
 
-// Get the human choice of rock, paper, or scissors. If the choice is invalid, the function is called recursively. Human input is case insensitive. 
-function getHumanChoice() {
-    let choice = prompt("Select Rock, Paper, or Scissors");
-    if (choice.toUpperCase() !== "ROCK" && choice.toUpperCase()  !== "PAPER" && choice.toUpperCase() !== "SCISSORS") {
-        console.log("Invalid Choice - Try Again");
-        return getHumanChoice();
-    }
-    console.log("You chose " + choice.toUpperCase());
-    return choice.toUpperCase();
-}
-
-// Play a round of rock, paper, scissors. A tie results in a repeat of the round. 
+// Play a round of rock, paper, scissors. A tie results in a repeat of the round.
 function playRound(humanChoice, computerChoice) {
+    // Don't play if game is over
+    if (gameRound >= 5) return;
+
     if (humanChoice === computerChoice) {
-        console.log("Tie " + humanScore + " - " + computerScore);
-        return playRound(getHumanChoice(), getComputerChoice(max));
+        gameRound = gameRound;
+        gameLogDiv.textContent = `Game Round:${gameRound} Tie!`
     }
     else if (humanChoice === "ROCK" && computerChoice === "SCISSORS") {
         ++humanScore;
-        console.log("You Win! Rock beats Scissors " + humanScore + " - " + computerScore);
-        return "You Win! Rock beats Scissors";
-
-    }
-    else if (humanChoice === "PAPER" && computerChoice === "ROCK") {
+        ++gameRound;
+        updateScore();
+        gameLogDiv.textContent = `Game Round:${gameRound} You Win! Rock beats Scissors`;
+    } else if (humanChoice === "PAPER" && computerChoice === "ROCK") {
         ++humanScore;
-        console.log("You Win! Paper beats Rock " + humanScore + " - " + computerScore);
-        return "You Win! Paper beats Rock";
-    }
-    else if (humanChoice === "SCISSORS" && computerChoice === "PAPER") {
+        ++gameRound;
+        updateScore();
+        gameLogDiv.textContent = `Game Round:${gameRound} You Win! Paper beats Rock`;
+    } else if (humanChoice === "SCISSORS" && computerChoice === "PAPER") {
         ++humanScore;
-        console.log("You Win! Scissors beats Paper " + humanScore + " - " + computerScore);
-        return "You Win! Scissors beats Paper";
-    }
-    else {
+        ++gameRound;
+        updateScore();
+        gameLogDiv.textContent = `Game Round:${gameRound} You Win! Scissors beats Paper`;
+    } else {
         ++computerScore;
-        console.log("You Lose! Computer wins " + humanScore + " - " + computerScore);
-        return "You Lose! Computer wins";
+        ++gameRound;
+        updateScore();
+        gameLogDiv.textContent = `Game Round:${gameRound}  You Lose! Computer wins`;
     }
 }
 
-// Play 5 rounds of rock, paper, scissors. If there is a tie, the round is repeated until there is a winner in the round. playRound is called recursively. 
-function playGame() {
-    for (let i = 0; i <5; ++i) {
-        playRound(getHumanChoice(), getComputerChoice(max));
-    }
-    if (humanScore > computerScore) {
-        console.log("You win the game! " + humanScore + " - " + computerScore);
-    } else if (humanScore < computerScore) {
-        console.log("You lose the game! " + humanScore + " - " + computerScore);
-    } 
-}
+const rockButton = document.querySelector("#rockButton");
+const paperButton = document.querySelector("#paperButton");
+const scissorsButton = document.querySelector("#scissorsButton");
+const gameContainer = document.querySelector("#gameContainer");
 
-// Allows player to press Play Game button to play the game. 
-document.getElementById('playButton').addEventListener('click', () => {
-    console.log('Button clicked!');
-    humanScore = 0;
-    computerScore = 0;
-    playGame();
+// add div to display score
+const scoreDiv = document.createElement("div");
+scoreDiv.classList.add("score-div");
+scoreDiv.textContent = `Score: You ${humanScore} - Computer ${computerScore}`;
+gameContainer.appendChild(scoreDiv);
+
+// for game log and game over text
+const gameLogDiv = document.createElement("div");
+gameLogDiv.classList.add("gameLogDiv");
+gameLogDiv.textContent = "";
+gameContainer.appendChild(gameLogDiv);
+
+rockButton.addEventListener("click", () => {
+    playRound("ROCK", getComputerChoice(max));
 });
+
+paperButton.addEventListener("click", () => {
+    playRound("PAPER", getComputerChoice(max));
+});
+
+scissorsButton.addEventListener("click", () => {
+    playRound("SCISSORS", getComputerChoice(max));
+});
+
+// Display the running score, and announce a winner of the game once one player reaches 5 points.
+function updateScore() {
+    scoreDiv.textContent = `Score: You ${humanScore} - Computer ${computerScore}`;
+    if (gameRound === 5) {
+        const winner = humanScore > computerScore ? "You Win!" :
+                      humanScore < computerScore ? "Computer Wins!" :
+                      "It's a Tie!";
+        gameLogDiv.textContent = `Score: You ${humanScore} - Computer ${computerScore}. GAME OVER! ${winner}`;
+
+        // Disable all buttons
+        rockButton.disabled = true;
+        paperButton.disabled = true;
+        scissorsButton.disabled = true;
+    }
+}
+
+
+
+
